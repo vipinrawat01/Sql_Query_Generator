@@ -1,34 +1,64 @@
 import streamlit as st
 import google.generativeai as genai
 
-GOOGLE_API_KEY="AIzaSyDal7zcmQvQ4v_KM_ECRFIlkZw04Is6zpI"
+GOOGLE_API_KEY = "AIzaSyDal7zcmQvQ4v_KM_ECRFIlkZw04Is6zpI"
 
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
 def main():
     st.set_page_config(page_title="SQL Query Generator", page_icon=":robot:")
+    
     st.markdown(
         """
-            <div style ="text-align: center;
-            color:red;">
-                <h1> SQL Query Generator </h1>
-                <h3>I can generate SQL queries for you! </h3>
-                <h4>With Explanation as well!</h4>
-                <p> This tool is a simple tool that allows you to generate SQL queries based on your prompts.</p>
-            </div>
+        <style>
+            .stApp {
+                background-color: #ffe6e6;  
+                color: #333;
+            }
+            .title {
+                text-align: center;
+                color: #a52a2a;  
+                margin-top: 20px;
+                margin-bottom: 10px;
+                padding: 10px;
+                background-color: #ff9999; 
+                border-radius: 10px; 
+            }
+            .subtitle {
+                text-align: center;
+                color: #7d7d7d; 
+            }
+            .description {
+                text-align: center;
+                color: #555; 
+            }
+            .container {
+                margin: 20px auto;
+                padding: 20px;
+                border-radius: 15px;  
+                background-color: #ffffff;  
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+                width: 100%; 
+            }
+            h1, h3, h4 {
+                margin: 0; 
+            }
+        </style>
         """,
         unsafe_allow_html=True
     )
 
-    text_input = st.text_area("Enter your Query here in English")
+    st.markdown('<div class="title"><h1>SQL Query Generator</h1></div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle"><h3>I can generate SQL queries with Explanation for you!</h3></div>', unsafe_allow_html=True)
+    st.markdown('<div class="description"><p>This tool allows you to generate SQL queries based on your prompts.</p></div>', unsafe_allow_html=True)
 
-    
+    text_input = st.text_area("Enter your Query here in English")
 
     submit = st.button("Generate SQL Query")
     if submit:
         with st.spinner("Generating SQL Query..."):
-            template="""
+            template = """
                 Create a SQL query snippet using the below text:
 
                 ```
@@ -36,13 +66,11 @@ def main():
                 ```
                 I just want a SQL query
             """
-            formatted_template=template.format(text_input=text_input)
-            response=model.generate_content(formatted_template)
-            sql_query=response.text
+            formatted_template = template.format(text_input=text_input)
+            response = model.generate_content(formatted_template)
+            sql_query = response.text.strip().lstrip("```sql").rstrip("```")
 
-            sql_query = sql_query.strip().lstrip("```sql").rstrip("```")
-
-            expected_output="""
+            expected_output = """
                 What would be the expected response of this SQL query Snippet:
 
                 ```
@@ -50,12 +78,11 @@ def main():
                 ```
                 Provide sample tabular Response with no Explanation
             """
-            expected_output_formatted=expected_output.format(sql_query=sql_query)
+            expected_output_formatted = expected_output.format(sql_query=sql_query)
             eoutput = model.generate_content(expected_output_formatted)
             eoutput = eoutput.text
             
-
-            explanation="""
+            explanation = """
                 Explain this SQL query:
 
                 ```
@@ -63,10 +90,10 @@ def main():
                 ```
                 Please provide with simplest of Explanation:
             """
-            explanation_formatted= explanation.format(sql_query=sql_query)
-            explanation=model.generate_content(explanation_formatted)
-            explanation=explanation.text
-
+            explanation_formatted = explanation.format(sql_query=sql_query)
+            explanation = model.generate_content(explanation_formatted)
+            explanation = explanation.text
+            
             with st.container():
                 st.success("SQL Query Generated Successfully! Here is your Query:")
                 st.code(sql_query, language="sql")
@@ -74,6 +101,5 @@ def main():
                 st.markdown(eoutput)
                 st.success("Explanation for this SQL Query:")
                 st.markdown(explanation)
-
 
 main()
