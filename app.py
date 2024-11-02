@@ -53,6 +53,7 @@ def main():
     st.markdown('<div class="subtitle"><h3>I can generate SQL queries with Explanation for you!</h3></div>', unsafe_allow_html=True)
     st.markdown('<div class="description"><p>This tool allows you to generate SQL queries based on your prompts.</p></div>', unsafe_allow_html=True)
 
+    
     text_input = st.text_area("Enter your Query here in English")
 
     submit = st.button("Generate SQL Query")
