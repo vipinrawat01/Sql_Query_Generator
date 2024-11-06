@@ -96,6 +96,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-Vipin Rawat - [GitHub](https://github.com/YourGitHubUsername)
+Vipin Rawat - [GitHub](https://github.com/vipinrawat01)
 
 Feel free to reach out for questions or suggestions!
