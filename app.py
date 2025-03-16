@@ -65,7 +65,7 @@ def main():
                 ```
                     {text_input}
                 ```
-                I just want a SQL query
+                I just want a SQL query. No Explanation. Just query
             """
             formatted_template = template.format(text_input=text_input)
             response = model.generate_content(formatted_template)
